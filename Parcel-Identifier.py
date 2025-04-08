@@ -22,17 +22,29 @@ plt.rcParams['figure.dpi'] = 300
 ## Use json or csv for editing before adding
 parcels = gpd.read_file("Syracuse_Parcel_Map_(Q4_2024).zip")
 
-# Summary/workspace
+# Summary/workspace (assist)
 parcelcodes = parcels["LU_parcel"].value_counts()
 parcelcodes2 = parcels["LUCat_Old"].value_counts()
 
+# Query by "Commercial" zoning code
+commercial = parcels.query("LUCat_Old == 'Commercial'")
+print(commercial["FID"].value_counts())
+
+# Query by "single-use" land use
+lowdensity = commercial.query("LU_parcel == '1 use sm bld'")
+print(lowdensity["FID"].value_counts())
+    # Smallest queryable QPD column that reflects density
+
 # Calculate percent of parcel vs land area
 footprints = gpd.read_file("cugir-009065-geojson.json")
+    # Project commercial and footprints as shape, clip from one another
 
-# Identifiers: AV, setback, area, zoning code
-    # By zoning code: parcels["LUCat_old == 'Commercial']
-    # By area (Density): parcels["Shape_Are"] / 
-# Identifiers: 
+# Calculate setbacks from road?
+    # Load in road data, then calculate setback from centroid
+
+# Identifiers: AV, setback, area
+    # By area (Density): commercial["Shape_Are"] / 
+
 # Index walkscore?, assessed value, percent of land as parking, sales tax, proximity
 # Definition of strip mall? Theoretical and 
 
