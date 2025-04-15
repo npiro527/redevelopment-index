@@ -6,3 +6,5 @@ Created on Fri Apr  4 15:34:43 2025
 """
 
 # Add walkscore through API?
+
+# Area of parking, AV, 

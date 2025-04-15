@@ -54,13 +54,34 @@ footprints = footprints.to_crs(epsg=utm18n)
 lowdensity = lowdensity.to_crs(epsg=utm18n)
 
 # Calculate area of footprints and lowdensity in meters squared (m2)
-footprints['aream2'] = footprints.geometry.area
-lowdensity['aream2'] = lowdensity.geometry.area
+footprints['fpaream2'] = footprints.geometry.area
+lowdensity['ldaream2'] = lowdensity.geometry.area
 
-# Use footprints to clip building from land in low density
-lowdensityland = lowdensity.clip(footprints, keep_geom_type=True)
-lowdensityland['land_area_m2'] = lowdensityland.geometry.area
+# Join low density identifiers to footprints
+ldin = lowdensity[["PRINTKEY", "geometry"]]
+footprints = footprints.sjoin(ldin, how='inner', predicate='within')
 
+# Calculate building footprints by area
+fp_by_parcel = footprints.groupby("PRINTKEY")["fpaream2"].sum()
+lowdensity = lowdensity.set_index("PRINTKEY").join(fp_by_parcel, how="left")
+
+# Add parking characteristics to lowdensity
+lowdensity["parkingaream2"] = lowdensity["ldaream2"] - lowdensity["fpaream2"]
+lowdensity["parkingpct"] = lowdensity["parkingaream2"] / lowdensity["ldaream2"]
+lowdensity["parkingaream2"] = lowdensity["parkingaream2"].fillna(0)
+lowdensity["parkingpct"] = lowdensity["parkingpct"].fillna(0)
+lowdensity["fpaream2"] = lowdensity["fpaream2"].fillna(0)
+
+#%%
+# Loop through parcels to see if one parcel touches another
+lowdensity["shared_boundary"] = False
+for idx, parcel in lowdensity.iterrows():
+    others = lowdensity.drop(idx)
+    
+    if others.geometry.touches(parcel.geometry).any():
+        lowdensity.at[idx, "shared_boundary"] = True
+        
+#%%
 # Plotting
 #fig1,ax1 = plt.subplots(dpi=300)
 #footprints.plot('geometry', edgecolor='gray', facecolor='none', linewidth=0.5, alpha=0.5, ax=ax1)
