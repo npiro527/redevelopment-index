@@ -48,6 +48,8 @@ parcels = parcels.sjoin(bgin, how="left", predicate="within")
         #parcelcodes2 = parcels["LUCat_Old"].value_counts()
 
 #%%
+# Narrow parcels down by Commercial and Low Density
+
 # Query by "Commercial" zoning code
 commercial = parcels.query("LUCat_Old == 'Commercial'")
 print("\nNumber of Properties Zoned Commercial:", len(commercial["FID"]))

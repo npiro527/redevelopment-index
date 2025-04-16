@@ -6,7 +6,7 @@ Created on Fri Apr  4 15:34:43 2025
 """
 
 
-# Area of vacant land, touching, AV, projects per number of res units by bg
+# Area of vacant land, shared boundary, AV, projects per number of res units by bg
 
 #%%
 
@@ -25,15 +25,22 @@ index = gpd.read_file("ld_out_file.gpkg")
 
 #%%
 # Set index categories and weights
+# Assign each category a rank of importance from first to fourth, with scores adding up to ten. 
+index["area_rank"] = 1
+index["shared_boundary_rank"] = 2
+index["av_rank"] = 3
+index["density_rank"] = 4
 
 #%%
-# Area by quintile
+# Vacant area percent by quartile
+index["area_quartile"] = pd.qcut(index["vacantpct"], q=4, labels=[.25, .5, .75, 1]) 
+    # The more vacant, the higher the score
 
 #%%
 # Touching
 
 #%%
-# AV by quintile
+# AV by quartile
 
 #%%
-# Projects per res units by bg by qunitile
+# Projects per res units by bg by quartile
