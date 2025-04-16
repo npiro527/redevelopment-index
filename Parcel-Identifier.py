@@ -18,13 +18,28 @@ import seaborn as sns
 import fiona
 
 plt.rcParams['figure.dpi'] = 300
+utm18n = 32618
+
+# Define output files
+ld_out_file = "ld_out_file.gpkg"
+fp_out_file = "fp_out_file.gpkg"
 
 #%%
-# Import data
+# Import data and join block groups information
 ## Use json and csv for editing before adding, converting both to geopackages
+
+# Import and project parcels data
 parcels = gpd.read_file("Syracuse_Parcel_Map_(Q4_2024).zip")
 parcels.to_file("parcels.gpkg", driver="GPKG")
-#parcels = parcels.set_index('PRINTKEY')
+parcels = parcels.to_crs(epsg=utm18n)
+
+# Import and project block groups data
+blockgrps = gpd.read_file("tl_2024_36_bg.zip")
+blockgrps = blockgrps.to_crs(epsg=utm18n)
+
+# Spatial join block groups to parcels
+bgin = blockgrps[["GEOID", "geometry"]]
+parcels = parcels.sjoin(bgin, how="left", predicate="within")
 
 #%%
 # Summary/workspace
@@ -45,10 +60,7 @@ print("\nNumber of Properties with Small Density Land Use:", len(lowdensity["FID
 #%%
 # Calculate percent of parcel vs land area
 
-# Define projection code for utm18n
-utm18n = 32618
-
-# Read and project building footprints and lowdensity
+# Read and project parcels, building footprints, and lowdensity
 footprints = gpd.read_file("cugir-009065-geojson.json")
 footprints = footprints.to_crs(epsg=utm18n)
 lowdensity = lowdensity.to_crs(epsg=utm18n)
@@ -91,16 +103,34 @@ for idx, parcel in lowdensity.iterrows():
     
     if others.geometry.touches(parcel.geometry).any():
         lowdensity.at[idx, "shared_boundary"] = True
-   
+print("\nNumber of parcels that share a boundary:", lowdensity["shared_boundary"].sum())
 #%%
 # Calculate assessed value of land per square meter
 lowdensity["avperm2"] = lowdensity["land_av"] / lowdensity["ldaream2"]
-print("\nAverage Land Assessed Value per Square Meter", lowdensity["avperm2"].mean())
+print("\nAverage Land Assessed Value per Square Meter:", "$", lowdensity["avperm2"].mean().round(2))
+
 #%%
-# One proximity indicator
+# Determine number of redevelopment candidates per number of residential units by block group
+    # n_res density by block group, sjoin coordinates of lowdensity by bg, groupby bg, add new density column to lowdensity
+
+# Calculate number of residential units per block group
+resdensity = parcels[["GEOID", "n_ResUnits"]]
+resdensity = resdensity.groupby("GEOID")["n_ResUnits"].sum().to_frame()
+resdensity = resdensity.rename(columns={'n_ResUnits':'n_resunitsbybg'})
+
+# Calculate number of projects by residential density for each block group
+resdensity["prj_per_bg"] = lowdensity.groupby("GEOID").size()
+resdensity["prj_per_bg"] = resdensity["prj_per_bg"].fillna(0)
+resdensity["prj_per_nres_by_bg"] = resdensity["prj_per_bg"] / resdensity["n_resunitsbybg"]
+
+# Join to lowdensity and calculate redevelopment candidates by blockgroup
+lowdensity = lowdensity.merge(resdensity, on='GEOID', how='left')
 
 #%%
 # Save files
+lowdensity.to_file(ld_out_file, layer= 'lowdensity')
+footprints.to_file(fp_out_file, layer = 'footprints')
+
 #%%
 # Create a plot
 fig, ax = plt.subplots(figsize=(10, 10), dpi=300)
