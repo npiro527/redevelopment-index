@@ -35,7 +35,8 @@ index["density_rank"] = 4
 # Vacant area percent by quartile
 index["area_quartile"] = pd.qcut(index["vacantpct"], q=4, labels=[.25, .5, .75, 1]) 
     # The more vacant, the higher the score
-
+# Error with creating quartiles since 232/363 have scores of 1. Need to troubleshoot without dropping
+# print(lowdensity["vacantpct"].value_counts())
 #%%
 # Touching
 

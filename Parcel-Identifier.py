@@ -132,6 +132,7 @@ lowdensity = lowdensity.merge(resdensity, on='GEOID', how='left')
 # Save files
 lowdensity.to_file(ld_out_file, layer= 'lowdensity')
 footprints.to_file(fp_out_file, layer = 'footprints')
+#### Final clean of columns to keep
 
 #%%
 # Create a plot
@@ -144,12 +145,3 @@ ax.set_title("Parcel Footprints")
 
 # Show the map
 plt.show()
-
-#%%
-# Calculate setbacks from road?
-    # Load in road data, then calculate setback from centroid
-# Calculate proximity
-
-# Index walkscore?, assessed value, percent of land as parking, sales tax, proximity
-# Definition of strip mall? Theoretical and 
-
