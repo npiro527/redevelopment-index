@@ -124,10 +124,20 @@ resdensity = resdensity.rename(columns={'n_ResUnits':'n_resunitsbybg'})
 resdensity["prj_per_bg"] = lowdensity.groupby("GEOID").size()
 resdensity["prj_per_bg"] = resdensity["prj_per_bg"].fillna(0)
 resdensity["prj_per_nres_by_bg"] = resdensity["prj_per_bg"] / resdensity["n_resunitsbybg"]
+resdensity["density_per_100"] = resdensity["prj_per_nres_by_bg"] * 100
 
 # Join to lowdensity and calculate redevelopment candidates by blockgroup
 lowdensity = lowdensity.merge(resdensity, on='GEOID', how='left')
 
+# Assign zero values to properties without projects in their block group
+#lowdensity["prj_per_bg_y"] = lowdensity["prj_per_bg_y"].fillna(0)
+#lowdensity["prj_per_nres_by_bg_y"] = lowdensity["prj_per_nres_by_bg_y"].fillna(0)
+#lowdensity["density_per_100_y"] = lowdensity["density_per_100_y"].fillna(0)
+#resdensity["n_resunitsbybg"] = resdensity["n_resunitsbybg"].fillna(0)
+
+print("\nAverage Projects per 100 Residential Units by Block Group:", resdensity["density_per_100"].mean().round(3))
+
+#### Numbers are very small, possibly do per 100 or 1000 residential units
 #%%
 # Save files
 lowdensity.to_file(ld_out_file, layer= 'lowdensity')
