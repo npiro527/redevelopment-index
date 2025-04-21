@@ -42,12 +42,6 @@ bgin = blockgrps[["GEOID", "geometry"]]
 parcels = parcels.sjoin(bgin, how="left", predicate="within")
 
 #%%
-# Summary/workspace
-        #layers = fiona.listlayers("Syracuse_Parcel_Map_(Q4_2024).zip")
-        #parcelcodes = parcels["LU_parcel"].value_counts()
-        #parcelcodes2 = parcels["LUCat_Old"].value_counts()
-
-#%%
 # Narrow parcels down by Commercial and Low Density
 
 # Query by "Commercial" zoning code
@@ -135,7 +129,7 @@ lowdensity = lowdensity.merge(resdensity, on='GEOID', how='left')
 #lowdensity["density_per_100_y"] = lowdensity["density_per_100_y"].fillna(0)
 #resdensity["n_resunitsbybg"] = resdensity["n_resunitsbybg"].fillna(0)
 
-print("\nAverage Projects per 100 Residential Units by Block Group:", resdensity["density_per_100"].mean().round(3))
+print("\nAverage Projects per 100 Residential Units by Block Group:", resdensity["density_per_100"].mean())
 
 #### Numbers are very small, possibly do per 100 or 1000 residential units
 #%%
