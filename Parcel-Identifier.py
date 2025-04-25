@@ -10,15 +10,17 @@ Created on Fri Apr  4 15:29:17 2025
 
 
 # Load in packages and set defaults
-import pandas as pd
+import json
 import geopandas as gpd
 import matplotlib.pyplot as plt
-import requests
-import seaborn as sns
-import fiona
 
 plt.rcParams['figure.dpi'] = 300
 utm18n = 32618
+
+info = json.load(open("input.json"))
+parcel_file = info["input_parcel"]
+footprints_file = info["input_footprints"]
+bg_file = info["input_block_grp"]
 
 # Define output files
 ld_out_file = "ld_out_file.gpkg"
@@ -26,15 +28,14 @@ fp_out_file = "fp_out_file.gpkg"
 
 #%%
 # Import data and join block groups information
-## Use json and csv for editing before adding, converting both to geopackages
 
 # Import and project parcels data
-parcels = gpd.read_file("Syracuse_Parcel_Map_(Q4_2024).zip")
+parcels = gpd.read_file(parcel_file)
 parcels.to_file("parcels.gpkg", driver="GPKG")
 parcels = parcels.to_crs(epsg=utm18n)
 
 # Import and project block groups data
-blockgrps = gpd.read_file("tl_2024_36_bg.zip")
+blockgrps = gpd.read_file(bg_file)
 blockgrps = blockgrps.to_crs(epsg=utm18n)
 
 # Spatial join block groups to parcels
@@ -57,7 +58,7 @@ print("\nNumber of Properties with Small Density Land Use:", len(lowdensity["FID
 # Calculate percent of parcel vs land area
 
 # Read and project parcels, building footprints, and lowdensity
-footprints = gpd.read_file("cugir-009065-geojson.json")
+footprints = gpd.read_file(footprints_file)
 footprints = footprints.to_crs(epsg=utm18n)
 lowdensity = lowdensity.to_crs(epsg=utm18n)
 
@@ -90,7 +91,6 @@ print("\nAverage Vacant Area per Parcel:", lowdensity["vacantpct"].mean() * 100,
 filtered_lowdensity = lowdensity[lowdensity["vacantpct"] <1.0]
 print("\nAverage Vacant Area per Parcel (Excluding 100% Vacants):", filtered_lowdensity["vacantpct"].mean() * 100, "%")
 
-#### how to intrepret zeroes: vacants?, footprint data incomplete per streetview
 #%%
 # Loop through parcels to see if one parcel touches another
 lowdensity["shared_boundary"] = False
@@ -131,21 +131,8 @@ lowdensity = lowdensity.merge(resdensity, on='GEOID', how='left')
 
 print("\nAverage Projects per 100 Residential Units by Block Group:", resdensity["density_per_100"].mean())
 
-#### Numbers are very small, possibly do per 100 or 1000 residential units
 #%%
 # Save files
 lowdensity.to_file(ld_out_file, layer= 'lowdensity')
 footprints.to_file(fp_out_file, layer = 'footprints')
 #### Final clean of columns to keep
-
-#%%
-# Create a plot
-fig, ax = plt.subplots(figsize=(10, 10), dpi=300)
-lowdensity.plot(ax=ax, edgecolor="blue", facecolor="blue", linewidth=0.5, alpha=0.7)
-
-# Remove axes for a clean look
-ax.axis("off")
-ax.set_title("Parcel Footprints")
-
-# Show the map
-plt.show()
