@@ -36,7 +36,7 @@ ax.axis('off')
 table = ax.table(cellText=top_candidates.values, colLabels=["Final Score"], rowLabels=top_candidates.index, loc='center')
 ax.set_title("Table 1: Top 25 Candidates")
 
-plt.savefig("top_25_parcels_table.jpg")
+plt.savefig("top_25_parcels_table.jpg", bbox_inches='tight')
 plt.show()
 
 #%%
@@ -89,6 +89,6 @@ parcels.plot(ax=ax, edgecolor="black", facecolor="white", linewidth=0.2, alpha=0
 
 ax.axis("off")
 ax.set_title("Map 2: Parcels by Index Score: Green (10) to Red (4)")
-fig.savefig("parcels_index_map.jpg")
+fig.savefig("parcels_index_map.png")
 
 plt.show()
