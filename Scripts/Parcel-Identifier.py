@@ -18,7 +18,7 @@ plt.rcParams['figure.dpi'] = 300
 utm18n = 32618
 
 # Define inputs from json file
-info = json.load(open("input.json"))
+info = json.load(open("Scripts/input.json"))
 parcel_file = info["input_parcel"]
 footprints_file = info["input_footprints"]
 bg_file = info["input_block_grp"]
