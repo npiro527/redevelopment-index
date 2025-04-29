@@ -27,7 +27,7 @@ Run this script third. Visuals.py creates a table showing the top 25 scores, a g
 # Output Example: Syracuse, NY
 The script was initially developed with data illustrating the city of Syracuse, NY. Parcel data was sourced through the City of Syracuse’s Open Data Portal, building footprint data from Cornell University, and block group data from the US Census Bureau. All maps are projected with UTM18N. 
 
-# Table 1: 
+# Table 1:
 This table shows the top 25 properties ranked by final index score. Based on the chosen factor rankings, high scoring properties should be interpreted as better candidates for redevelopment than lower scoring properties.
 
 # Graph 1:
