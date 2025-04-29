@@ -31,15 +31,15 @@ The script was initially developed with data illustrating the city of Syracuse, 
 This table shows the top 25 properties ranked by final index score. Based on the chosen factor rankings, high scoring properties should be interpreted as better candidates for redevelopment than lower scoring properties.
 
 # Graph 1:
-![graph] https://github.com/npiro527/redevelopment-index/blob/main/score_distribution.jpg
+![graph] (https://github.com/npiro527/redevelopment-index/blob/main/score_distribution.jpg)
 This graph shows the distribution of all scores in the dataset. The bins reflect full value scores, which are rounded to the whole value of the score (ex. 3.47 is displayed as a 3). The graph provides important contextualization when interpreting the results or performing statistical analysis.
 
 # Map 1:
-![map1] https://github.com/npiro527/redevelopment-index/blob/ef9ff53e63da4f49ea0ff97254388faf521fc39d/eligible_parcels.jpg
+![map1] (https://github.com/npiro527/redevelopment-index/blob/ef9ff53e63da4f49ea0ff97254388faf521fc39d/eligible_parcels.jpg)
 This map shows the location of the redevelopment candidates compared to the total parcel map. Locational information may help visualize the geographical distribution of candidate properties.
 
 # Map 2:
-![map2] https://github.com/npiro527/redevelopment-index/blob/ef9ff53e63da4f49ea0ff97254388faf521fc39d/parcels_index_map.jpg
+![map2] (https://github.com/npiro527/redevelopment-index/blob/ef9ff53e63da4f49ea0ff97254388faf521fc39d/parcels_index_map.jpg)
 This map shows the location and score of the redevelopment candidates on a scale of green (10) to red (4). The information is based on the bins identified when creating Graph 1. The map provides further information on the grouping and geographical distribution of the candidate properties.
 
 # Limitations and Future Improvements:
