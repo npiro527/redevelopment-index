@@ -1,5 +1,6 @@
-# redevelopment-index
-Redevelopment index for urban strip malls
+# Urban Strip Mall Redevelopment Index
+# Purpose:
+  
 
 # Script 1: Parcel-Identifier
 This script loads data and identifies parcels to be included in the index

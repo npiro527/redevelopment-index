@@ -17,10 +17,18 @@ import matplotlib.pyplot as plt
 plt.rcParams['figure.dpi'] = 300
 utm18n = 32618
 
+# Define inputs from json file
 info = json.load(open("input.json"))
 parcel_file = info["input_parcel"]
 footprints_file = info["input_footprints"]
 bg_file = info["input_block_grp"]
+parcel_id = info["parcel_id"]
+parcel_zone_col = info["parcel_zone_col"]
+parcel_zone = info["parcel_zone"]
+parcel_LU_col = info["parcel_LU_col"]
+parcel_LU = info["parcel_LU"]
+parcel_land_AV = info["parcel_land_av"]
+parcel_n_resunits = info["parcel_n_resunits"]
 
 # Define output files
 ld_out_file = "ld_out_file.gpkg"
@@ -46,7 +54,7 @@ parcels = parcels.sjoin(bgin, how="left", predicate="within")
 # Narrow parcels down by Commercial and Low Density
 
 # Query by "Commercial" zoning code
-commercial = parcels.query("LUCat_Old == 'Commercial'")
+commercial = parcels.query("parcel_zone_col == 'parcel_zone'")
 print("\nNumber of Properties Zoned Commercial:", len(commercial["FID"]))
 
 # Query by "single-use" land use
