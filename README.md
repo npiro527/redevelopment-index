@@ -4,7 +4,9 @@ This script is a prioritization tool that identifies and analyzes low-density co
 
 # Background
 With nearly a half-century of urban “renewal” policies promising to revitalize America’s cities, the programs’ impacts have had a questionable effect. In many instances, entire blocks- even neighborhoods- were razed to make room for newer, flashier buildings. The high density, mixed-use structures lining commercial corridors in urban centers were often labelled as “blight”, removed and replaced by lower density structures or just left as overgrown lots. Removing the core threads of a neighborhood weakens the urban fabric of a city, with urban renewal acting as an unraveling force as opposed to a strengthening one. These land use policies imposed a vision of the ideal urban planning doctrine of the time: low density, segregated land uses that prioritize automotive infrastructure over pedestrian accessibility. 
+
 Post-urban renewal policies have brought a renewed sense of importance for urban commercial corridors. Cities with strong bones- sound structures that once supported adaptive, walkable communities- are becoming attractive to residents, local governments, and investors. For residents, the block that was once bulldozed and replaced with a car-dependent strip mall is viewed as an eyesore in need of new buildings. For investors, an old, run-down building may have adverse side effects on neighboring property values, reducing their willingness to invest. For local governments, low-density parcels may mean low tax revenue. In any case, low-density parcels present an opportunity for redevelopment and growth.
+
 This project was built within the context of Syracuse, NY, a rustbelt city of around 150,000 four hours north of New York City. Once an industrial powerhouse, Syracuse’s population has fallen by nearly 50%, with wealth and residents retreating to the neighboring suburbs. Property values remain low, commercial corridors- both strip-malls and legacy mixed-use- remain dilapidated, and vacant properties remain overgrown. Syracuse’s path to redevelopment reflects a broader trend of rustbelt cities along the Great Lakes: like many of them, it faces new opportunities for adaptive growth in the coming decades. New investment from educational institutions, the removal of divisive interstates, and the prospect of a micro-chip manufacturing plant are once in a lifetime opportunities to kickstart growth. With new opportunities come new challenges, such as gentrification and displacement, but also leave a cash-strapped city with the need for a tool to help prioritize resources investment. This project seeks to assist cities like Syarcuse in determining how to best prioritize investments to ultimately take advantage of these opportunities.
 
 # Factors for Analysis
@@ -29,12 +31,15 @@ The script was initially developed with data illustrating the city of Syracuse, 
 This table shows the top 25 properties ranked by final index score. Based on the chosen factor rankings, high scoring properties should be interpreted as better candidates for redevelopment than lower scoring properties.
 
 # Graph 1:
+![graph] https://github.com/npiro527/redevelopment-index/blob/ef9ff53e63da4f49ea0ff97254388faf521fc39d/score_distribution.jpg
 This graph shows the distribution of all scores in the dataset. The bins reflect full value scores, which are rounded to the whole value of the score (ex. 3.47 is displayed as a 3). The graph provides important contextualization when interpreting the results or performing statistical analysis.
 
 # Map 1:
+![map1] https://github.com/npiro527/redevelopment-index/blob/ef9ff53e63da4f49ea0ff97254388faf521fc39d/eligible_parcels.jpg
 This map shows the location of the redevelopment candidates compared to the total parcel map. Locational information may help visualize the geographical distribution of candidate properties.
 
 # Map 2:
+![map2] https://github.com/npiro527/redevelopment-index/blob/ef9ff53e63da4f49ea0ff97254388faf521fc39d/parcels_index_map.jpg
 This map shows the location and score of the redevelopment candidates on a scale of green (10) to red (4). The information is based on the bins identified when creating Graph 1. The map provides further information on the grouping and geographical distribution of the candidate properties.
 
 # Limitations and Future Improvements:
@@ -42,5 +47,7 @@ One immediate limitation of the Parcel-Identifier script is the filtering of all
 
 # Data Sources:
 City of Syracuse Parcel Data: https://data.syr.gov/datasets/addb85afc6a14daca340c4ae0077e998_0/explore
+
 Onondaga County Building Footprints: https://cugir.library.cornell.edu/catalog/cugir-009065
+
 New York State Block Groups: https://www2.census.gov/geo/tiger/TIGER2020/BG/
