@@ -1,7 +1,7 @@
 {
-    "input_parcel": "Input Files (Syracuse Example)/Syracuse_Parcel_Map_(Q4_2024).zip",
-    "input_footprints": "Input Files (Syracuse Example)/cugir-009065-geojson.json",
-    "input_block_grp": "Input Files (Syracuse Example)/tl_2024_36_bg.zip",
+    "input_parcel": "Input Files/Syracuse_Parcel_Map_(Q4_2024).zip",
+    "input_footprints": "Input Files/cugir-009065-geojson.json",
+    "input_block_grp": "Input Files/tl_2024_36_bg.zip",
     
     "parcel_id": "PRINTKEY (to-be-filled-in-script)",
     "parcel_zone_col": "LUCat_Old (to-be-filled-in-script)",
