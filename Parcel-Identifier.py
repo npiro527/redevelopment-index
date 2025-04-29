@@ -6,13 +6,13 @@ Created on Fri Apr  4 15:29:17 2025
 """
 
 # This script loads data and identifies parcels to be included in the index
-## Universality Notes (with double ##): json or csv as an input file, dictionary w/ name of parcel file
 
-
+#%%
 # Load in packages and set defaults
 import json
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import os
 
 plt.rcParams['figure.dpi'] = 300
 utm18n = 32618
@@ -22,21 +22,16 @@ info = json.load(open("input.json"))
 parcel_file = info["input_parcel"]
 footprints_file = info["input_footprints"]
 bg_file = info["input_block_grp"]
-parcel_id = info["parcel_id"]
-parcel_zone_col = info["parcel_zone_col"]
-parcel_zone = info["parcel_zone"]
-parcel_LU_col = info["parcel_LU_col"]
-parcel_LU = info["parcel_LU"]
-parcel_land_AV = info["parcel_land_av"]
-parcel_n_resunits = info["parcel_n_resunits"]
 
 # Define output files
-ld_out_file = "ld_out_file.gpkg"
-fp_out_file = "fp_out_file.gpkg"
+ld_out_file = "Output Files/ld_out_file.gpkg"
+fp_out_file = "Output Files/fp_out_file.gpkg"
+
+# Define output folder
+os.makedirs("Output Files", exist_ok=True)
 
 #%%
-# Import data and join block groups information
-
+## Import data and join block groups information
 # Import and project parcels data
 parcels = gpd.read_file(parcel_file)
 parcels.to_file("parcels.gpkg", driver="GPKG")
@@ -51,8 +46,7 @@ bgin = blockgrps[["GEOID", "geometry"]]
 parcels = parcels.sjoin(bgin, how="left", predicate="within")
 
 #%%
-# Narrow parcels down by Commercial and Low Density
-
+## Narrow parcels down by Commercial and Low Density
 # Query by "Commercial" zoning code
 commercial = parcels.query("LUCat_Old == 'Commercial'")
 print("\nNumber of Properties Zoned Commercial:", len(commercial["FID"]))
@@ -63,8 +57,7 @@ print("\nNumber of Properties with Small Density Land Use:", len(lowdensity["FID
     # Smallest queryable QPD column that reflects density
 
 #%%
-# Calculate percent of parcel vs land area
-
+## Calculate percent of parcel vs land area
 # Read and project parcels, building footprints, and lowdensity
 footprints = gpd.read_file(footprints_file)
 footprints = footprints.to_crs(epsg=utm18n)
@@ -100,7 +93,8 @@ filtered_lowdensity = lowdensity[lowdensity["vacantpct"] <1.0]
 print("\nAverage Vacant Area per Parcel (Excluding 100% Vacants):", filtered_lowdensity["vacantpct"].mean() * 100, "%")
 
 #%%
-# Loop through parcels to see if one parcel touches another
+## Evaluate parcels to see if one parcel touches another
+# Create for loop to run through lowdensity file
 lowdensity["shared_boundary"] = False
 for idx, parcel in lowdensity.iterrows():
     others = lowdensity.drop(idx)
@@ -108,14 +102,15 @@ for idx, parcel in lowdensity.iterrows():
     if others.geometry.touches(parcel.geometry).any():
         lowdensity.at[idx, "shared_boundary"] = True
 print("\nNumber of parcels that share a boundary:", lowdensity["shared_boundary"].sum())
+
 #%%
-# Calculate assessed value of land per square meter
+## Calculate assessed value of land per square meter
+# Normalize av per square meter
 lowdensity["avperm2"] = lowdensity["land_av"] / lowdensity["ldaream2"]
 print("\nAverage Land Assessed Value per Square Meter:", "$", lowdensity["avperm2"].mean().round(2))
 
 #%%
-# Determine number of redevelopment candidates per number of residential units by block group
-    # n_res density by block group, sjoin coordinates of lowdensity by bg, groupby bg, add new density column to lowdensity
+## Determine number of redevelopment candidates per number of residential units by block group
 
 # Calculate number of residential units per block group
 resdensity = parcels[["GEOID", "n_ResUnits"]]
@@ -130,12 +125,6 @@ resdensity["density_per_100"] = resdensity["prj_per_nres_by_bg"] * 100
 
 # Join to lowdensity and calculate redevelopment candidates by blockgroup
 lowdensity = lowdensity.merge(resdensity, on='GEOID', how='left')
-
-# Assign zero values to properties without projects in their block group
-#lowdensity["prj_per_bg_y"] = lowdensity["prj_per_bg_y"].fillna(0)
-#lowdensity["prj_per_nres_by_bg_y"] = lowdensity["prj_per_nres_by_bg_y"].fillna(0)
-#lowdensity["density_per_100_y"] = lowdensity["density_per_100_y"].fillna(0)
-#resdensity["n_resunitsbybg"] = resdensity["n_resunitsbybg"].fillna(0)
 
 print("\nAverage Projects per 100 Residential Units by Block Group:", resdensity["density_per_100"].mean())
 
