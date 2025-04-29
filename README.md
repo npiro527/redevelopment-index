@@ -31,7 +31,7 @@ The script was initially developed with data illustrating the city of Syracuse, 
 This table shows the top 25 properties ranked by final index score. Based on the chosen factor rankings, high scoring properties should be interpreted as better candidates for redevelopment than lower scoring properties.
 
 # Graph 1:
-![graph] https://github.com/npiro527/redevelopment-index/blob/ef9ff53e63da4f49ea0ff97254388faf521fc39d/score_distribution.jpg
+![graph] https://github.com/npiro527/redevelopment-index/blob/main/score_distribution.jpg
 This graph shows the distribution of all scores in the dataset. The bins reflect full value scores, which are rounded to the whole value of the score (ex. 3.47 is displayed as a 3). The graph provides important contextualization when interpreting the results or performing statistical analysis.
 
 # Map 1:
