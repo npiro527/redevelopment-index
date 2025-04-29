@@ -54,7 +54,7 @@ parcels = parcels.sjoin(bgin, how="left", predicate="within")
 # Narrow parcels down by Commercial and Low Density
 
 # Query by "Commercial" zoning code
-commercial = parcels.query("parcel_zone_col == 'parcel_zone'")
+commercial = parcels.query("LUCat_Old == 'Commercial'")
 print("\nNumber of Properties Zoned Commercial:", len(commercial["FID"]))
 
 # Query by "single-use" land use
@@ -143,4 +143,3 @@ print("\nAverage Projects per 100 Residential Units by Block Group:", resdensity
 # Save files
 lowdensity.to_file(ld_out_file, layer= 'lowdensity')
 footprints.to_file(fp_out_file, layer = 'footprints')
-#### Final clean of columns to keep

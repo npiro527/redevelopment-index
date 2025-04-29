@@ -41,6 +41,12 @@ index["av_rank"] = info["av_rank"]
 # Ratio of projects to surrounding residential units within block groups
 index["density_rank"] = info["density_rank"]
 
+# Run check to ensure ranking system is equal to ten
+if info["density_rank"] + info["av_rank"] + info["shared_boundary_rank"] + info["area_rank"] == 10:
+    print("Index score of 10 assigned, ready to run!")
+else:
+    print("Index total does not equal 10. Return to input.json and reassign values so that they equal 10.")
+
 #%%
 # Vacant area percent by quartile
 index["area_score"] = (index["vacantpct"] * index["area_rank"])

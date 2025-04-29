@@ -26,6 +26,20 @@ lowdensity = lowdensity.to_crs(epsg=utm18n)
 index = index.to_crs(epsg=utm18n)
 
 #%%
+# Illustrate table with top 25 parcel candidates by final score
+filtered_index = index[["FullAddres", "final_score"]]
+top_candidates = filtered_index.sort_values(by="final_score", ascending=False).head(25)
+top_candidates.set_index("FullAddres", inplace=True)
+
+fig, ax = plt.subplots(figsize=(1, 6))  
+ax.axis('off')
+table = ax.table(cellText=top_candidates.values, colLabels=["Final Score"], rowLabels=top_candidates.index, loc='center')
+ax.set_title("Table 1: Top 25 Candidates")
+
+plt.savefig("top_25_parcels_table.jpg")
+plt.show()
+
+#%%
 # Graph distribution of index scores
 nbins = range(1,12)
 index['binned_score'] = pd.cut(index['final_score'], bins=nbins)
@@ -37,18 +51,19 @@ ax1.bar(counts.index.astype(int), counts.values, color="blue")
 ax1.set_xticks(range(1,11))
 ax1.set_xlabel("Index Scores")
 ax1.set_ylabel("Count of Properties")
-ax1.set_title("Distribution of Index Scores (1-10)")
+ax1.set_title("Table 2: Distribution of Index Scores (1-10)")
 fig1.tight_layout()
-fig1.savefig("score_distribution.png")
+fig1.savefig("score_distribution.jpg")
 
 #%%
 # Map identified parcels onto general parcel map
-fig, ax = plt.subplots(figsize=(10, 10), dpi=300)
+fig, ax = plt.subplots(figsize=(10, 10))
 lowdensity.plot(ax=ax, edgecolor="black", facecolor="blue", linewidth=0.5, alpha=0.9)
 parcels.plot(ax=ax, edgecolor="black", facecolor="white", linewidth=0.2, alpha=0.7)
 
 ax.axis("off")
-ax.set_title("Eligible Parcels (Blue)")
+ax.set_title("Map 1: Eligible Parcels (Blue)")
+fig.savefig("eligible_parcels.jpg")
 
 plt.show()
 
@@ -56,26 +71,24 @@ plt.show()
 # Map identified parcels by final score
 index['binned_score'] = index['binned_score'].astype(str)
 bin_colors = {
-    "(9,10]": "purple",
-    "(8, 9]": "blue",
-    "(7, 8]": "cyan",
-    "(6, 7]": "green",
-    "(5, 6]": "yellow",
-    "(4, 5]": "orange",
+    "(9,10]": "green",
+    "(8, 9]": "#66cc66",  # Light green
+    "(7, 8]": "#99ff99",  # Lighter green
+    "(6, 7]": "#cccc00",  # Yellow-green
+    "(5, 6]": "#ffcc00",  # Yellow
+    "(4, 5]": "#ff9933",  # Orange
     "(3, 4]": "red",
 }
 
-# Create a figure and axes
 fig, ax = plt.subplots(figsize=(10, 10), dpi=300)
-
-# Plot based on index bins
 for bin_value, color in bin_colors.items():
     index[index['binned_score'] == str(bin_value)].plot(
-        ax=ax, edgecolor="black", facecolor=color, linewidth=0.5, alpha=0.7, label=bin_value
+        ax=ax, edgecolor="black", facecolor=color, linewidth=0.5, alpha=1, label=bin_value
     )
+parcels.plot(ax=ax, edgecolor="black", facecolor="white", linewidth=0.2, alpha=0.7)
 
-ax.legend(title="Index Bin Categories", loc="lower right")
 ax.axis("off")
-ax.set_title("Parcel Footprints by Index Score")
+ax.set_title("Map 2: Parcels by Index Score: Green (10) to Red (4)")
+fig.savefig("parcels_index_map.jpg")
 
 plt.show()
